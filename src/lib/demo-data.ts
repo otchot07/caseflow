@@ -595,14 +595,90 @@ export const casesOverTime = [
   { month: "Sep", submitted: 4, closed: 2 },
 ];
 
-/** Employee intake script used by the guided reporting experience. */
-export const intakeQuestions = [
-  "Let's start with the situation. What happened?",
-  "When did you first notice the issue?",
-  "Who was involved?",
-  "Did anyone else witness what happened?",
-  "Do you have any emails, messages, documents or other material related to the situation?",
-  "How has the situation affected your work?",
-  "Has this matter been reported or discussed before?",
-  "Is there anything else you would like the reviewer to know?",
+/** Employee intake conversation used by the guided reporting experience. */
+export type IntakePrompt = {
+  id: string;
+  /** Question shown to the employee. */
+  question: string;
+  /** Information this question is meant to capture. */
+  captures: string;
+  /** Words in earlier answers that mean this question is already covered. */
+  coveredBy?: string[];
+  /** Example answer offered in the demo. */
+  example: string;
+};
+
+export const intakePrompts: IntakePrompt[] = [
+  {
+    id: "situation",
+    question: "What happened?",
+    captures: "situation",
+    example:
+      "I've been having problems with my manager for the last few months. He keeps changing my shifts at the last minute, and yesterday he shouted at me in front of everyone.",
+  },
+  {
+    id: "start",
+    question: "When did this start?",
+    captures: "first occurrence",
+    coveredBy: ["since june", "since may", "started in"],
+    example: "Around the middle of June, just before our team planning week.",
+  },
+  {
+    id: "recent",
+    question:
+      "You mentioned this has happened several times. Can you tell me about the most recent incident?",
+    captures: "most recent incident",
+    example:
+      "Yesterday during our team meeting he raised his voice about a shift I had already agreed with him, and said I was being difficult in front of the whole team.",
+  },
+  {
+    id: "people",
+    question: "Who was involved?",
+    captures: "people mentioned",
+    coveredBy: ["my manager", "daniel", "müller", "team lead"],
+    example: "My manager, Daniel Müller. He leads our engineering team.",
+  },
+  {
+    id: "witnesses",
+    question: "Was anyone else present?",
+    captures: "potential witnesses",
+    example:
+      "Lena Fischer and Sarah Klein were both in the meeting room and heard it.",
+  },
+  {
+    id: "before",
+    question: "Has something similar happened before?",
+    captures: "pattern",
+    example:
+      "Yes. There was a similar disagreement in July and again in late August, both about schedule changes.",
+  },
+  {
+    id: "raised",
+    question: "Have you raised this with anyone previously?",
+    captures: "prior reporting",
+    example:
+      "No, this is the first time I'm reporting it. I only spoke about it with Lena informally.",
+  },
+  {
+    id: "material",
+    question:
+      "Do you have any emails, messages, documents or other material related to this?",
+    captures: "evidence",
+    example:
+      "I have the scheduling email he sent on 7 September and a Teams conversation from the same day, plus a screenshot.",
+  },
+  {
+    id: "impact",
+    question: "How has this affected your work?",
+    captures: "impact",
+    example:
+      "It's hard to concentrate and I've been anxious before every shift change.",
+  },
+  {
+    id: "anything-else",
+    question: "Is there anything else you think is important for us to understand?",
+    captures: "additional information",
+    example:
+      "I would prefer that my colleagues aren't contacted before I've spoken to someone in employee relations.",
+  },
 ];

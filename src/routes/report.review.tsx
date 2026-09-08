@@ -6,13 +6,13 @@ import { Panel, PanelHeader, btn } from "@/components/kit";
 export const Route = createFileRoute("/report/review")({
   head: () => ({
     meta: [
-      { title: "Review your report — Caseflow" },
+      { title: "Here's what we've captured — Caseflow" },
       {
         name: "description",
         content:
           "Review the situation, people involved, timeline and attached material before submitting your report.",
       },
-      { property: "og:title", content: "Review your report — Caseflow" },
+      { property: "og:title", content: "Here's what we've captured — Caseflow" },
       {
         property: "og:description",
         content:
@@ -34,6 +34,12 @@ const documents = [
   { name: "Teams conversation.txt", meta: "MESSAGE · 7 Sep 2026", icon: MessageSquare },
   { name: "Screenshot.png", meta: "IMAGE · 7 Sep 2026", icon: ImageIcon },
   { name: "My own notes.docx", meta: "DOCUMENT · 8 Sep 2026", icon: FileText },
+];
+
+const clarifications = [
+  "The exact date of the first schedule change in June is not yet confirmed.",
+  "The wording used during the meeting on 7 September was not described.",
+  "It is unclear whether the informal conversation with a colleague was recorded anywhere.",
 ];
 
 function EditAction() {
@@ -66,10 +72,10 @@ function ReviewReport() {
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
         <h1 className="text-[1.375rem] font-semibold tracking-[-0.02em]">
-          Review your report
+          Here&apos;s what we&apos;ve captured
         </h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Check the information below before submitting. You can edit any section.
+          Based on your conversation. Check anything that looks wrong — you can edit every section.
         </p>
 
         {submitted ? (
@@ -95,7 +101,7 @@ function ReviewReport() {
           </Panel>
 
           <Panel>
-            <PanelHeader title="People involved" action={<EditAction />} />
+            <PanelHeader title="People mentioned" action={<EditAction />} />
             <dl className="divide-y divide-border">
               <div className="grid gap-1 px-6 py-4 sm:grid-cols-[13rem_1fr]">
                 <dt className="label-caps pt-0.5">Reporting employee</dt>
@@ -127,7 +133,7 @@ function ReviewReport() {
           </Panel>
 
           <Panel>
-            <PanelHeader title="Documents and attachments" action={<EditAction />} />
+            <PanelHeader title="Evidence" action={<EditAction />} />
             <ul className="divide-y divide-border">
               {documents.map((d) => (
                 <li key={d.name} className="flex items-center gap-3 px-6 py-3.5">
@@ -139,6 +145,21 @@ function ReviewReport() {
                   <span className="ml-auto font-mono text-[0.75rem] text-muted-foreground">
                     {d.meta}
                   </span>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+
+
+          <Panel>
+            <PanelHeader
+              title="Information that may need clarification"
+              action={<EditAction />}
+            />
+            <ul className="divide-y divide-border">
+              {clarifications.map((c) => (
+                <li key={c} className="px-6 py-3.5 text-[0.875rem] text-foreground">
+                  {c}
                 </li>
               ))}
             </ul>
