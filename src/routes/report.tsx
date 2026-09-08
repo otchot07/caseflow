@@ -21,7 +21,7 @@ export const Route = createFileRoute("/report")({
       },
     ],
   }),
-  component: ReportConversation;
+  component: ReportConversation,
 });
 
 type Turn =
