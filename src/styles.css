@@ -160,3 +160,37 @@
     color: var(--color-foreground);
   }
 }
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.011em;
+    font-weight: 600;
+  }
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@utility label-caps {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 1px;
+  }
+}
