@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import { PageHeader, Panel, PanelHeader, StatusTag, btn, inputClass } from "@/components/kit";
+import { PageHeader, Panel, PanelHeader, StatusTag, btn, inputClass, selectClass } from "@/components/kit";
 import { cases, overviewStats } from "@/lib/demo-data";
 
 export const Route = createFileRoute("/hr/")({
@@ -85,7 +85,7 @@ function OverviewPage() {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             aria-label="Filter by status"
-            className={`${inputClass} w-auto`}
+            className={selectClass}
           >
             {statuses.map((s) => (
               <option key={s}>{s}</option>

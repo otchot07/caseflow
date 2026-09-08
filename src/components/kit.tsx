@@ -144,3 +144,6 @@ export function Mono({ children }: { children: ReactNode }) {
     <span className="font-mono text-[0.8125rem] tracking-tight">{children}</span>
   );
 }
+
+export const selectClass =
+  "focus-ring rounded-md border border-input bg-surface px-2.5 py-2 text-[0.8125rem] text-foreground";

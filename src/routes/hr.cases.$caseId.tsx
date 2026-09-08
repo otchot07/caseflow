@@ -14,6 +14,7 @@ import {
   Field,
   btn,
   inputClass,
+  selectClass,
 } from "@/components/kit";
 import {
   caseById,
@@ -108,7 +109,7 @@ function CaseDetail() {
             value={reviewer}
             onChange={(e) => setReviewer(e.target.value)}
             aria-label="Assign reviewer"
-            className={`${inputClass} w-auto`}
+            className={selectClass}
           >
             {reviewerOptions.map((r) => (
               <option key={r}>{r}</option>
@@ -125,7 +126,7 @@ function CaseDetail() {
             value={status}
             onChange={(e) => setStatus(e.target.value as typeof status)}
             aria-label="Change status"
-            className={`${inputClass} w-auto`}
+            className={selectClass}
           >
             <option>Awaiting review</option>
             <option>In review</option>

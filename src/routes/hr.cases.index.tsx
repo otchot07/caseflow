@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import { PageHeader, Panel, StatusTag, inputClass } from "@/components/kit";
+import { PageHeader, Panel, StatusTag, inputClass, selectClass } from "@/components/kit";
 import { cases, categories } from "@/lib/demo-data";
 
 export const Route = createFileRoute("/hr/cases/")({
@@ -86,7 +86,7 @@ function CasesPage() {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             aria-label="Filter by status"
-            className={`${inputClass} w-auto`}
+            className={selectClass}
           >
             {statusOptions.map((s) => (
               <option key={s}>{s}</option>
@@ -96,7 +96,7 @@ function CasesPage() {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             aria-label="Filter by category"
-            className={`${inputClass} w-auto`}
+            className={selectClass}
           >
             {["Category: all", ...categories].map((c) => (
               <option key={c}>{c}</option>
@@ -106,7 +106,7 @@ function CasesPage() {
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
             aria-label="Filter by date"
-            className={`${inputClass} w-auto`}
+            className={selectClass}
           >
             {dateOptions.map((d) => (
               <option key={d}>{d}</option>
