@@ -10,14 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HrRouteImport } from './routes/hr'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ReportRouteImport } from './routes/report'
+import { Route as HrIndexRouteImport } from './routes/hr.index'
 import { Route as ReportReviewRouteImport } from './routes/report.review'
+import { Route as HrCasesIndexRouteImport } from './routes/hr.cases.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HrRoute = HrRouteImport.update({
+  id: '/hr',
+  path: '/hr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -35,18 +43,31 @@ const ReportRoute = ReportRouteImport.update({
   path: '/report',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HrIndexRoute = HrIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HrRoute,
+} as any)
 const ReportReviewRoute = ReportReviewRouteImport.update({
   id: '/review',
   path: '/review',
   getParentRoute: () => ReportRoute,
 } as any)
+const HrCasesIndexRoute = HrCasesIndexRouteImport.update({
+  id: '/cases/',
+  path: '/cases/',
+  getParentRoute: () => HrRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/hr': typeof HrRouteWithChildren
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/report': typeof ReportRouteWithChildren
   '/report/review': typeof ReportReviewRoute
+  '/hr/': typeof HrIndexRoute
+  '/hr/cases/': typeof HrCasesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,25 +75,55 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/report': typeof ReportRouteWithChildren
   '/report/review': typeof ReportReviewRoute
+  '/hr': typeof HrIndexRoute
+  '/hr/cases': typeof HrCasesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/hr': typeof HrRouteWithChildren
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/report': typeof ReportRouteWithChildren
   '/report/review': typeof ReportReviewRoute
+  '/hr/': typeof HrIndexRoute
+  '/hr/cases/': typeof HrCasesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/privacy' | '/report' | '/report/review'
+  fullPaths:
+    | '/'
+    | '/hr'
+    | '/login'
+    | '/privacy'
+    | '/report'
+    | '/report/review'
+    | '/hr/'
+    | '/hr/cases/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/privacy' | '/report' | '/report/review'
-  id: '__root__' | '/' | '/login' | '/privacy' | '/report' | '/report/review'
+  to:
+    | '/'
+    | '/login'
+    | '/privacy'
+    | '/report'
+    | '/report/review'
+    | '/hr'
+    | '/hr/cases'
+  id:
+    | '__root__'
+    | '/'
+    | '/hr'
+    | '/login'
+    | '/privacy'
+    | '/report'
+    | '/report/review'
+    | '/hr/'
+    | '/hr/cases/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HrRoute: typeof HrRouteWithChildren
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
   ReportRoute: typeof ReportRouteWithChildren
@@ -85,6 +136,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hr': {
+      id: '/hr'
+      path: '/hr'
+      fullPath: '/hr'
+      preLoaderRoute: typeof HrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -108,6 +166,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hr/': {
+      id: '/hr/'
+      path: '/'
+      fullPath: '/hr/'
+      preLoaderRoute: typeof HrIndexRouteImport
+      parentRoute: typeof HrRoute
+    }
     '/report/review': {
       id: '/report/review'
       path: '/review'
@@ -115,8 +180,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportReviewRouteImport
       parentRoute: typeof ReportRoute
     }
+    '/hr/cases/': {
+      id: '/hr/cases/'
+      path: '/cases'
+      fullPath: '/hr/cases/'
+      preLoaderRoute: typeof HrCasesIndexRouteImport
+      parentRoute: typeof HrRoute
+    }
   }
 }
+
+interface HrRouteChildren {
+  HrIndexRoute: typeof HrIndexRoute
+  HrCasesIndexRoute: typeof HrCasesIndexRoute
+}
+
+const HrRouteChildren: HrRouteChildren = {
+  HrIndexRoute: HrIndexRoute,
+  HrCasesIndexRoute: HrCasesIndexRoute,
+}
+
+const HrRouteWithChildren = HrRoute._addFileChildren(HrRouteChildren)
 
 interface ReportRouteChildren {
   ReportReviewRoute: typeof ReportReviewRoute
@@ -131,6 +215,7 @@ const ReportRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HrRoute: HrRouteWithChildren,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   ReportRoute: ReportRouteWithChildren,
