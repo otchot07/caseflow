@@ -10,33 +10,183 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HrRouteImport } from './routes/hr'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReportRouteImport } from './routes/report'
+import { Route as HrIndexRouteImport } from './routes/hr.index'
+import { Route as HrReportsRouteImport } from './routes/hr.reports'
+import { Route as HrSettingsRouteImport } from './routes/hr.settings'
+import { Route as ReportReviewRouteImport } from './routes/report.review'
+import { Route as HrCasesIndexRouteImport } from './routes/hr.cases.index'
+import { Route as HrCasesCaseIdRouteImport } from './routes/hr.cases.$caseId'
+import { Route as HrPeopleIndexRouteImport } from './routes/hr.people.index'
+import { Route as HrPeoplePersonIdRouteImport } from './routes/hr.people.$personId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HrRoute = HrRouteImport.update({
+  id: '/hr',
+  path: '/hr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HrIndexRoute = HrIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrReportsRoute = HrReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrSettingsRoute = HrSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => HrRoute,
+} as any)
+const ReportReviewRoute = ReportReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => ReportRoute,
+} as any)
+const HrCasesIndexRoute = HrCasesIndexRouteImport.update({
+  id: '/cases/',
+  path: '/cases/',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrCasesCaseIdRoute = HrCasesCaseIdRouteImport.update({
+  id: '/cases/$caseId',
+  path: '/cases/$caseId',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrPeopleIndexRoute = HrPeopleIndexRouteImport.update({
+  id: '/people/',
+  path: '/people/',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrPeoplePersonIdRoute = HrPeoplePersonIdRouteImport.update({
+  id: '/people/$personId',
+  path: '/people/$personId',
+  getParentRoute: () => HrRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/hr': typeof HrRouteWithChildren
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRouteWithChildren
+  '/hr/reports': typeof HrReportsRoute
+  '/hr/settings': typeof HrSettingsRoute
+  '/report/review': typeof ReportReviewRoute
+  '/hr/': typeof HrIndexRoute
+  '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
+  '/hr/people/$personId': typeof HrPeoplePersonIdRoute
+  '/hr/cases/': typeof HrCasesIndexRoute
+  '/hr/people/': typeof HrPeopleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRouteWithChildren
+  '/hr/reports': typeof HrReportsRoute
+  '/hr/settings': typeof HrSettingsRoute
+  '/report/review': typeof ReportReviewRoute
+  '/hr': typeof HrIndexRoute
+  '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
+  '/hr/people/$personId': typeof HrPeoplePersonIdRoute
+  '/hr/cases': typeof HrCasesIndexRoute
+  '/hr/people': typeof HrPeopleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/hr': typeof HrRouteWithChildren
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRouteWithChildren
+  '/hr/reports': typeof HrReportsRoute
+  '/hr/settings': typeof HrSettingsRoute
+  '/report/review': typeof ReportReviewRoute
+  '/hr/': typeof HrIndexRoute
+  '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
+  '/hr/people/$personId': typeof HrPeoplePersonIdRoute
+  '/hr/cases/': typeof HrCasesIndexRoute
+  '/hr/people/': typeof HrPeopleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/hr'
+    | '/login'
+    | '/privacy'
+    | '/report'
+    | '/hr/reports'
+    | '/hr/settings'
+    | '/report/review'
+    | '/hr/'
+    | '/hr/cases/$caseId'
+    | '/hr/people/$personId'
+    | '/hr/cases/'
+    | '/hr/people/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/privacy'
+    | '/report'
+    | '/hr/reports'
+    | '/hr/settings'
+    | '/report/review'
+    | '/hr'
+    | '/hr/cases/$caseId'
+    | '/hr/people/$personId'
+    | '/hr/cases'
+    | '/hr/people'
+  id:
+    | '__root__'
+    | '/'
+    | '/hr'
+    | '/login'
+    | '/privacy'
+    | '/report'
+    | '/hr/reports'
+    | '/hr/settings'
+    | '/report/review'
+    | '/hr/'
+    | '/hr/cases/$caseId'
+    | '/hr/people/$personId'
+    | '/hr/cases/'
+    | '/hr/people/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HrRoute: typeof HrRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ReportRoute: typeof ReportRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +198,132 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hr': {
+      id: '/hr'
+      path: '/hr'
+      fullPath: '/hr'
+      preLoaderRoute: typeof HrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hr/': {
+      id: '/hr/'
+      path: '/'
+      fullPath: '/hr/'
+      preLoaderRoute: typeof HrIndexRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/reports': {
+      id: '/hr/reports'
+      path: '/reports'
+      fullPath: '/hr/reports'
+      preLoaderRoute: typeof HrReportsRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/settings': {
+      id: '/hr/settings'
+      path: '/settings'
+      fullPath: '/hr/settings'
+      preLoaderRoute: typeof HrSettingsRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/report/review': {
+      id: '/report/review'
+      path: '/review'
+      fullPath: '/report/review'
+      preLoaderRoute: typeof ReportReviewRouteImport
+      parentRoute: typeof ReportRoute
+    }
+    '/hr/cases/': {
+      id: '/hr/cases/'
+      path: '/cases'
+      fullPath: '/hr/cases/'
+      preLoaderRoute: typeof HrCasesIndexRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/cases/$caseId': {
+      id: '/hr/cases/$caseId'
+      path: '/cases/$caseId'
+      fullPath: '/hr/cases/$caseId'
+      preLoaderRoute: typeof HrCasesCaseIdRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/people/': {
+      id: '/hr/people/'
+      path: '/people'
+      fullPath: '/hr/people/'
+      preLoaderRoute: typeof HrPeopleIndexRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/people/$personId': {
+      id: '/hr/people/$personId'
+      path: '/people/$personId'
+      fullPath: '/hr/people/$personId'
+      preLoaderRoute: typeof HrPeoplePersonIdRouteImport
+      parentRoute: typeof HrRoute
+    }
   }
 }
 
+interface HrRouteChildren {
+  HrReportsRoute: typeof HrReportsRoute
+  HrSettingsRoute: typeof HrSettingsRoute
+  HrIndexRoute: typeof HrIndexRoute
+  HrCasesCaseIdRoute: typeof HrCasesCaseIdRoute
+  HrPeoplePersonIdRoute: typeof HrPeoplePersonIdRoute
+  HrCasesIndexRoute: typeof HrCasesIndexRoute
+  HrPeopleIndexRoute: typeof HrPeopleIndexRoute
+}
+
+const HrRouteChildren: HrRouteChildren = {
+  HrReportsRoute: HrReportsRoute,
+  HrSettingsRoute: HrSettingsRoute,
+  HrIndexRoute: HrIndexRoute,
+  HrCasesCaseIdRoute: HrCasesCaseIdRoute,
+  HrPeoplePersonIdRoute: HrPeoplePersonIdRoute,
+  HrCasesIndexRoute: HrCasesIndexRoute,
+  HrPeopleIndexRoute: HrPeopleIndexRoute,
+}
+
+const HrRouteWithChildren = HrRoute._addFileChildren(HrRouteChildren)
+
+interface ReportRouteChildren {
+  ReportReviewRoute: typeof ReportReviewRoute
+}
+
+const ReportRouteChildren: ReportRouteChildren = {
+  ReportReviewRoute: ReportReviewRoute,
+}
+
+const ReportRouteWithChildren =
+  ReportRoute._addFileChildren(ReportRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HrRoute: HrRouteWithChildren,
+  LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
+  ReportRoute: ReportRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
