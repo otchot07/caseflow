@@ -28,12 +28,12 @@ type Entry = { question: string; answer: string | null };
 
 const seeded: Entry[] = [
   {
-    question: intakeQuestions[0],
+    question: intakeQuestions[0] ?? "",
     answer:
       "I've been having problems with my manager for the last few months. It started with changes to my schedule that were made without discussing them with me first.",
   },
   {
-    question: intakeQuestions[1],
+    question: intakeQuestions[1] ?? "",
     answer:
       "Around the middle of June. I can't remember the exact date, but it was the week before our team planning meeting.",
   },
@@ -43,7 +43,7 @@ function ReportIntake() {
   const navigate = useNavigate();
   const [entries, setEntries] = useState<Entry[]>([
     ...seeded,
-    { question: intakeQuestions[2], answer: null },
+    { question: intakeQuestions[2] ?? "", answer: null },
   ]);
   const [draft, setDraft] = useState("");
   const [attachments, setAttachments] = useState<string[]>([]);
@@ -57,9 +57,10 @@ function ReportIntake() {
     if (!value) return;
     setEntries((prev) => {
       const next = [...prev];
-      next[next.length - 1] = { ...next[next.length - 1], answer: value };
+      const last = next[next.length - 1];
+      if (last) next[next.length - 1] = { question: last.question, answer: value };
       if (next.length < total) {
-        next.push({ question: intakeQuestions[next.length], answer: null });
+        next.push({ question: intakeQuestions[next.length] ?? "", answer: null });
       }
       return next;
     });

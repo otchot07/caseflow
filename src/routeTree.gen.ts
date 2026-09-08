@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReportRouteImport } from './routes/report'
+import { Route as ReportReviewRouteImport } from './routes/report.review'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +30,52 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportReviewRoute = ReportReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => ReportRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRouteWithChildren
+  '/report/review': typeof ReportReviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRouteWithChildren
+  '/report/review': typeof ReportReviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/report': typeof ReportRouteWithChildren
+  '/report/review': typeof ReportReviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/privacy'
+  fullPaths: '/' | '/login' | '/privacy' | '/report' | '/report/review'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/privacy'
-  id: '__root__' | '/' | '/login' | '/privacy'
+  to: '/' | '/login' | '/privacy' | '/report' | '/report/review'
+  id: '__root__' | '/' | '/login' | '/privacy' | '/report' | '/report/review'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
+  ReportRoute: typeof ReportRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -82,13 +101,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report/review': {
+      id: '/report/review'
+      path: '/review'
+      fullPath: '/report/review'
+      preLoaderRoute: typeof ReportReviewRouteImport
+      parentRoute: typeof ReportRoute
+    }
   }
 }
+
+interface ReportRouteChildren {
+  ReportReviewRoute: typeof ReportReviewRoute
+}
+
+const ReportRouteChildren: ReportRouteChildren = {
+  ReportReviewRoute: ReportReviewRoute,
+}
+
+const ReportRouteWithChildren =
+  ReportRoute._addFileChildren(ReportRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
+  ReportRoute: ReportRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
