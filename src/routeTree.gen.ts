@@ -17,6 +17,9 @@ import { Route as ReportRouteImport } from './routes/report'
 import { Route as HrIndexRouteImport } from './routes/hr.index'
 import { Route as ReportReviewRouteImport } from './routes/report.review'
 import { Route as HrCasesIndexRouteImport } from './routes/hr.cases.index'
+import { Route as HrCasesCaseIdRouteImport } from './routes/hr.cases.$caseId'
+import { Route as HrPeopleIndexRouteImport } from './routes/hr.people.index'
+import { Route as HrPeoplePersonIdRouteImport } from './routes/hr.people.$personId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +61,21 @@ const HrCasesIndexRoute = HrCasesIndexRouteImport.update({
   path: '/cases/',
   getParentRoute: () => HrRoute,
 } as any)
+const HrCasesCaseIdRoute = HrCasesCaseIdRouteImport.update({
+  id: '/cases/$caseId',
+  path: '/cases/$caseId',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrPeopleIndexRoute = HrPeopleIndexRouteImport.update({
+  id: '/people/',
+  path: '/people/',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrPeoplePersonIdRoute = HrPeoplePersonIdRouteImport.update({
+  id: '/people/$personId',
+  path: '/people/$personId',
+  getParentRoute: () => HrRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -67,7 +85,10 @@ export interface FileRoutesByFullPath {
   '/report': typeof ReportRouteWithChildren
   '/report/review': typeof ReportReviewRoute
   '/hr/': typeof HrIndexRoute
+  '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
+  '/hr/people/$personId': typeof HrPeoplePersonIdRoute
   '/hr/cases/': typeof HrCasesIndexRoute
+  '/hr/people/': typeof HrPeopleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,7 +97,10 @@ export interface FileRoutesByTo {
   '/report': typeof ReportRouteWithChildren
   '/report/review': typeof ReportReviewRoute
   '/hr': typeof HrIndexRoute
+  '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
+  '/hr/people/$personId': typeof HrPeoplePersonIdRoute
   '/hr/cases': typeof HrCasesIndexRoute
+  '/hr/people': typeof HrPeopleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,7 +111,10 @@ export interface FileRoutesById {
   '/report': typeof ReportRouteWithChildren
   '/report/review': typeof ReportReviewRoute
   '/hr/': typeof HrIndexRoute
+  '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
+  '/hr/people/$personId': typeof HrPeoplePersonIdRoute
   '/hr/cases/': typeof HrCasesIndexRoute
+  '/hr/people/': typeof HrPeopleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,7 +126,10 @@ export interface FileRouteTypes {
     | '/report'
     | '/report/review'
     | '/hr/'
+    | '/hr/cases/$caseId'
+    | '/hr/people/$personId'
     | '/hr/cases/'
+    | '/hr/people/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,7 +138,10 @@ export interface FileRouteTypes {
     | '/report'
     | '/report/review'
     | '/hr'
+    | '/hr/cases/$caseId'
+    | '/hr/people/$personId'
     | '/hr/cases'
+    | '/hr/people'
   id:
     | '__root__'
     | '/'
@@ -118,7 +151,10 @@ export interface FileRouteTypes {
     | '/report'
     | '/report/review'
     | '/hr/'
+    | '/hr/cases/$caseId'
+    | '/hr/people/$personId'
     | '/hr/cases/'
+    | '/hr/people/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -187,17 +223,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HrCasesIndexRouteImport
       parentRoute: typeof HrRoute
     }
+    '/hr/cases/$caseId': {
+      id: '/hr/cases/$caseId'
+      path: '/cases/$caseId'
+      fullPath: '/hr/cases/$caseId'
+      preLoaderRoute: typeof HrCasesCaseIdRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/people/': {
+      id: '/hr/people/'
+      path: '/people'
+      fullPath: '/hr/people/'
+      preLoaderRoute: typeof HrPeopleIndexRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/people/$personId': {
+      id: '/hr/people/$personId'
+      path: '/people/$personId'
+      fullPath: '/hr/people/$personId'
+      preLoaderRoute: typeof HrPeoplePersonIdRouteImport
+      parentRoute: typeof HrRoute
+    }
   }
 }
 
 interface HrRouteChildren {
   HrIndexRoute: typeof HrIndexRoute
+  HrCasesCaseIdRoute: typeof HrCasesCaseIdRoute
+  HrPeoplePersonIdRoute: typeof HrPeoplePersonIdRoute
   HrCasesIndexRoute: typeof HrCasesIndexRoute
+  HrPeopleIndexRoute: typeof HrPeopleIndexRoute
 }
 
 const HrRouteChildren: HrRouteChildren = {
   HrIndexRoute: HrIndexRoute,
+  HrCasesCaseIdRoute: HrCasesCaseIdRoute,
+  HrPeoplePersonIdRoute: HrPeoplePersonIdRoute,
   HrCasesIndexRoute: HrCasesIndexRoute,
+  HrPeopleIndexRoute: HrPeopleIndexRoute,
 }
 
 const HrRouteWithChildren = HrRoute._addFileChildren(HrRouteChildren)
