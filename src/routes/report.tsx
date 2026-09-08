@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Paperclip, ArrowUp, Mic } from "lucide-react";
+import { Paperclip, ArrowUp, Mic, Keyboard } from "lucide-react";
 import { btn } from "@/components/kit";
+import { VoiceRecorder } from "@/components/voice-recorder";
 import { intakePrompts, type IntakePrompt } from "@/lib/demo-data";
 
 export const Route = createFileRoute("/report")({
@@ -11,14 +12,16 @@ export const Route = createFileRoute("/report")({
       {
         name: "description",
         content:
-          "Describe a workplace situation in your own words. Caseflow asks only about what still needs clarification.",
+          "Describe a workplace situation in your own words, by voice or in writing. Caseflow asks only about what still needs clarification.",
       },
       { property: "og:title", content: "Workplace report — Caseflow" },
       {
         property: "og:description",
         content:
-          "Describe a workplace situation in your own words. Caseflow asks only about what still needs clarification.",
+          "Describe a workplace situation in your own words, by voice or in writing.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ReportConversation,
@@ -26,8 +29,10 @@ export const Route = createFileRoute("/report")({
 
 type Turn =
   | { role: "system"; id: string; text: string }
-  | { role: "employee"; id: string; text: string }
+  | { role: "employee"; id: string; text: string; mode: "voice" | "text" }
   | { role: "attachment"; id: string; text: string };
+
+type Mode = "unset" | "voice" | "text";
 
 /** Picks the next question, skipping anything the employee already covered. */
 function nextPrompt(asked: string[], answers: string[]): IntakePrompt | null {
@@ -49,6 +54,7 @@ function ReportConversation() {
   const [asked, setAsked] = useState<string[]>([first.id]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [draft, setDraft] = useState("");
+  const [mode, setMode] = useState<Mode>("unset");
   const [thinking, setThinking] = useState(false);
   const [done, setDone] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -61,19 +67,19 @@ function ReportConversation() {
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end" });
-  }, [turns, thinking]);
+  }, [turns, thinking, mode]);
 
   useEffect(() => {
-    if (!done && !thinking) inputRef.current?.focus();
-  }, [done, thinking]);
+    if (mode === "text" && !done && !thinking) inputRef.current?.focus();
+  }, [mode, done, thinking]);
 
-  function send(value: string) {
+  function send(value: string, via: "voice" | "text") {
     const text = value.trim();
     if (!text || thinking || done) return;
     const answered = [...answers, text];
     setTurns((prev) => [
       ...prev,
-      { role: "employee", id: `a-${prev.length}`, text },
+      { role: "employee", id: `a-${prev.length}`, text, mode: via },
     ]);
     setAnswers(answered);
     setDraft("");
@@ -91,7 +97,7 @@ function ReportConversation() {
         ...prev,
         { role: "system", id: upcoming.id, text: upcoming.question },
       ]);
-    }, 700);
+    }, 800);
   }
 
   function attach() {
@@ -134,11 +140,10 @@ function ReportConversation() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-12">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-14">
         {turns.length === 1 ? (
-          <p className="mb-8 text-[0.875rem] leading-relaxed text-muted-foreground">
-            Describe the situation in your own words. You don&apos;t need to organize
-            everything — we&apos;ll ask about anything that needs clarification.
+          <p className="mb-10 text-[0.875rem] leading-relaxed text-muted-foreground">
+            Tell us what happened in your own words. You can speak or type.
           </p>
         ) : null}
 
@@ -153,8 +158,13 @@ function ReportConversation() {
               </p>
             ) : turn.role === "employee" ? (
               <div key={turn.id} className="flex justify-end">
-                <div className="max-w-[30rem] rounded-md border border-border bg-surface px-4 py-3">
-                  <div className="label-caps">You</div>
+                <div className="max-w-[30rem] border-l-2 border-border pl-4">
+                  <div className="label-caps flex items-center gap-1.5">
+                    {turn.mode === "voice" ? (
+                      <Mic className="size-3" strokeWidth={2} />
+                    ) : null}
+                    {turn.mode === "voice" ? "You · spoken" : "You"}
+                  </div>
                   <p className="mt-1.5 text-[0.875rem] leading-relaxed text-foreground">
                     {turn.text}
                   </p>
@@ -178,7 +188,7 @@ function ReportConversation() {
           ) : null}
 
           {done ? (
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-md border border-border bg-surface px-5 py-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
               <p className="text-[0.875rem] text-muted-foreground">
                 Thank you. We have enough to put your report together.
               </p>
@@ -191,84 +201,107 @@ function ReportConversation() {
         </div>
       </main>
 
-      <div className="sticky bottom-0 border-t border-border bg-surface">
-        <div className="mx-auto w-full max-w-2xl px-6 py-4">
-          <div className="rounded-md border border-input bg-surface">
-            <label htmlFor="answer" className="sr-only">
-              Your response
-            </label>
-            <textarea
-              id="answer"
-              ref={inputRef}
-              rows={3}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  send(draft);
-                }
-              }}
-              placeholder={
-                done ? "Your report is ready to review." : "Describe what happened…"
-              }
-              disabled={done}
-              className="focus-ring w-full resize-none bg-transparent px-3.5 py-3 text-sm leading-relaxed outline-none placeholder:text-muted-foreground/70"
-            />
-            <div className="flex items-center justify-between border-t border-border px-2.5 py-2">
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  className={btn.ghost}
-                  onClick={attach}
-                  disabled={done}
-                >
-                  <Paperclip className="size-4" strokeWidth={1.75} />
-                  Attach
-                </button>
-                <button
-                  type="button"
-                  className={btn.ghost}
-                  aria-label="Record a spoken response"
-                  disabled
-                >
-                  <Mic className="size-4" strokeWidth={1.75} />
-                </button>
-                {current && !done ? (
-                  <button
-                    type="button"
-                    className={btn.link + " ml-2"}
-                    onClick={() => setDraft(current.example)}
-                  >
-                    Use example answer
-                  </button>
-                ) : null}
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  className={btn.ghost}
-                  onClick={() => navigate({ to: "/" })}
-                >
-                  Save and continue later
-                </button>
+      {!done ? (
+        <div className="sticky bottom-0 border-t border-border bg-surface">
+          <div className="mx-auto w-full max-w-2xl px-6 py-4">
+            {mode === "unset" ? (
+              <div className="flex flex-wrap items-center gap-3">
                 <button
                   type="button"
                   className={btn.primary}
-                  onClick={() => send(draft)}
-                  disabled={done || thinking || draft.trim().length === 0}
+                  onClick={() => setMode("voice")}
                 >
-                  Send
-                  <ArrowUp className="size-3.5" strokeWidth={2} />
+                  <Mic className="size-4" strokeWidth={1.75} />
+                  Speak
+                </button>
+                <button
+                  type="button"
+                  className={btn.secondary}
+                  onClick={() => setMode("text")}
+                >
+                  <Keyboard className="size-4" strokeWidth={1.75} />
+                  Type instead
                 </button>
               </div>
-            </div>
+            ) : mode === "voice" ? (
+              <VoiceRecorder
+                transcriptSource={current?.example ?? ""}
+                disabled={thinking}
+                onSwitchToText={() => setMode("text")}
+                onSubmit={(text) => send(text, "voice")}
+              />
+            ) : (
+              <div className="rounded-md border border-input bg-surface">
+                <label htmlFor="answer" className="sr-only">
+                  Your response
+                </label>
+                <textarea
+                  id="answer"
+                  ref={inputRef}
+                  rows={3}
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      send(draft, "text");
+                    }
+                  }}
+                  placeholder="Describe what happened…"
+                  className="focus-ring w-full resize-none bg-transparent px-3.5 py-3 text-sm leading-relaxed outline-none placeholder:text-muted-foreground/70"
+                />
+                <div className="flex items-center justify-between border-t border-border px-2.5 py-2">
+                  <div className="flex items-center gap-1">
+                    <button type="button" className={btn.ghost} onClick={attach}>
+                      <Paperclip className="size-4" strokeWidth={1.75} />
+                      Attach
+                    </button>
+                    <button
+                      type="button"
+                      className={btn.ghost}
+                      onClick={() => setMode("voice")}
+                    >
+                      <Mic className="size-4" strokeWidth={1.75} />
+                      Switch to voice
+                    </button>
+                    {current ? (
+                      <button
+                        type="button"
+                        className={btn.link + " ml-2"}
+                        onClick={() => setDraft(current.example)}
+                      >
+                        Use example answer
+                      </button>
+                    ) : null}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      className={btn.ghost}
+                      onClick={() => navigate({ to: "/" })}
+                    >
+                      Save and continue later
+                    </button>
+                    <button
+                      type="button"
+                      className={btn.primary}
+                      onClick={() => send(draft, "text")}
+                      disabled={thinking || draft.trim().length === 0}
+                    >
+                      Send
+                      <ArrowUp className="size-3.5" strokeWidth={2} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            <p className="mt-2.5 text-[0.75rem] text-muted-foreground">
+              Your responses are handled confidentially and reviewed by an
+              authorized person.
+            </p>
           </div>
-          <p className="mt-2.5 text-[0.75rem] text-muted-foreground">
-            Nothing is submitted until you review and confirm your report.
-          </p>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }
