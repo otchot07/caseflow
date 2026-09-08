@@ -15,6 +15,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ReportRouteImport } from './routes/report'
 import { Route as HrIndexRouteImport } from './routes/hr.index'
+import { Route as HrReportsRouteImport } from './routes/hr.reports'
+import { Route as HrSettingsRouteImport } from './routes/hr.settings'
 import { Route as ReportReviewRouteImport } from './routes/report.review'
 import { Route as HrCasesIndexRouteImport } from './routes/hr.cases.index'
 import { Route as HrCasesCaseIdRouteImport } from './routes/hr.cases.$caseId'
@@ -51,6 +53,16 @@ const HrIndexRoute = HrIndexRouteImport.update({
   path: '/',
   getParentRoute: () => HrRoute,
 } as any)
+const HrReportsRoute = HrReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => HrRoute,
+} as any)
+const HrSettingsRoute = HrSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => HrRoute,
+} as any)
 const ReportReviewRoute = ReportReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -83,6 +95,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/report': typeof ReportRouteWithChildren
+  '/hr/reports': typeof HrReportsRoute
+  '/hr/settings': typeof HrSettingsRoute
   '/report/review': typeof ReportReviewRoute
   '/hr/': typeof HrIndexRoute
   '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
@@ -95,6 +109,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/report': typeof ReportRouteWithChildren
+  '/hr/reports': typeof HrReportsRoute
+  '/hr/settings': typeof HrSettingsRoute
   '/report/review': typeof ReportReviewRoute
   '/hr': typeof HrIndexRoute
   '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
@@ -109,6 +125,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/report': typeof ReportRouteWithChildren
+  '/hr/reports': typeof HrReportsRoute
+  '/hr/settings': typeof HrSettingsRoute
   '/report/review': typeof ReportReviewRoute
   '/hr/': typeof HrIndexRoute
   '/hr/cases/$caseId': typeof HrCasesCaseIdRoute
@@ -124,6 +142,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/report'
+    | '/hr/reports'
+    | '/hr/settings'
     | '/report/review'
     | '/hr/'
     | '/hr/cases/$caseId'
@@ -136,6 +156,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/report'
+    | '/hr/reports'
+    | '/hr/settings'
     | '/report/review'
     | '/hr'
     | '/hr/cases/$caseId'
@@ -149,6 +171,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/report'
+    | '/hr/reports'
+    | '/hr/settings'
     | '/report/review'
     | '/hr/'
     | '/hr/cases/$caseId'
@@ -209,6 +233,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HrIndexRouteImport
       parentRoute: typeof HrRoute
     }
+    '/hr/reports': {
+      id: '/hr/reports'
+      path: '/reports'
+      fullPath: '/hr/reports'
+      preLoaderRoute: typeof HrReportsRouteImport
+      parentRoute: typeof HrRoute
+    }
+    '/hr/settings': {
+      id: '/hr/settings'
+      path: '/settings'
+      fullPath: '/hr/settings'
+      preLoaderRoute: typeof HrSettingsRouteImport
+      parentRoute: typeof HrRoute
+    }
     '/report/review': {
       id: '/report/review'
       path: '/review'
@@ -248,6 +286,8 @@ declare module '@tanstack/react-router' {
 }
 
 interface HrRouteChildren {
+  HrReportsRoute: typeof HrReportsRoute
+  HrSettingsRoute: typeof HrSettingsRoute
   HrIndexRoute: typeof HrIndexRoute
   HrCasesCaseIdRoute: typeof HrCasesCaseIdRoute
   HrPeoplePersonIdRoute: typeof HrPeoplePersonIdRoute
@@ -256,6 +296,8 @@ interface HrRouteChildren {
 }
 
 const HrRouteChildren: HrRouteChildren = {
+  HrReportsRoute: HrReportsRoute,
+  HrSettingsRoute: HrSettingsRoute,
   HrIndexRoute: HrIndexRoute,
   HrCasesCaseIdRoute: HrCasesCaseIdRoute,
   HrPeoplePersonIdRoute: HrPeoplePersonIdRoute,
